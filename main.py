@@ -35,7 +35,7 @@ class Score(db.Model):
 
 
 # ********************************************************************************
-# game class will be here and will be triggered when clicked on start game btn with "/wargame" end point
+# game class combines DEck, Card, Player classes and initiate a new game!
 from deck import Deck 
 from player import Player 
 
@@ -47,21 +47,27 @@ class Game:
       self.display_content = []
       self.start_game()
 
+
+  # saves and updates the score to the database
   def save_score(self, player_name):
-     
+  
       score = Score.query.filter_by(winner_name=player_name).order_by(Score.date_created).first()
       if score:
         # print(score)
-        score.total_win += 1
-        db.session.commit()
-        return redirect('/scores')
+        try:
+          score.total_win += 1
+          db.session.commit()
+          return redirect('/scores')
+        except:
+          return "There was issue updating this score!"
       else:
-        new_score = Score(winner_name=player_name)
-        db.session.add(new_score)
-        db.session.commit()
-        return redirect('/scores')
-
-
+        try:
+          new_score = Score(winner_name=player_name)
+          db.session.add(new_score)
+          db.session.commit()
+          return redirect('/scores')
+        except:
+          return "There was issue adding this score"
 
 
 
@@ -70,6 +76,7 @@ class Game:
     newdeck = Deck()
     # newdeck.show()
     newdeck.shuffle()
+
   #splitting the deck among the two players - alternate card from deck goes to each player respectively
 
     for i in range(0,len(newdeck.cards)-1):  
@@ -79,7 +86,7 @@ class Game:
         self.player2.cards_in_hand.append(newdeck.cards[i])
 
 
-    # unit test
+    # test
        # Test for checking the players card
       # count = 0
       # for card in self.player1.cards_in_hand:
@@ -96,14 +103,14 @@ class Game:
       # print(f"Round {round}")
 
       if len(self.player1.cards_in_hand) == 0:
-        self.display_content.append(f'{self.player1.name} is out of cards {self.player2.name} Wins!')
+        self.display_content.append(f'{self.player1.name} is out of cards {self.player2.name} Won!')
         # print(f'{self.player1.name} is out of cards {self.player2.name} Wins!')
         self.save_score(self.player2.name)
         game_status = False
         break
 
       if len(self.player2.cards_in_hand) == 0:
-        self.display_content.append(f'{self.player2.name} is out of cards {self.player1.name} Wins!')
+        self.display_content.append(f'{self.player2.name} is out of cards {self.player1.name} Won!')
         # print(f'{self.player2.name} is out of cards {self.player1.name} Wins!')
         self.save_score(self.player1.name)
         game_status = False
@@ -137,13 +144,13 @@ class Game:
           # print("WAR!!!")
           while at_war == True: 
             if len(self.player1.cards_in_hand) < 2:
-              self.display_content.append(f"{self.player2.name} has won")
+              self.display_content.append(f"{self.player1.name} run out of card, {self.player2.name} has won!")
               # print(f"{self.player2.name} has won")
               self.save_score(self.player2.name)
               at_war = False
               game_status = False
             elif len(self.player2.cards_in_hand) < 2:
-              self.display_content.append(f"{self.player1.name} has won")
+              self.display_content.append(f"{self.player2.name} run out of card, {self.player1.name} has won!")
               # print(f"{self.player1.name} has won")
               self.save_score(self.player1.name)
               at_war = False

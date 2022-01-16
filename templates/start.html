@@ -6,8 +6,8 @@
 
 {% block body%} 
   <body>
-    <div class="content">
-      <a href="#bottom">See who won!</a>
+    <div class="start_content">
+      <a href="#bottom" class="bottom">Click here to see who won!</a>
       {% if game_contents %}
         <ul>
           {% for content in game_contents %}
@@ -17,6 +17,8 @@
       {% endif %}
       
       <a href="/scores" id="bottom">View Scores</a>
+      <a href="/" >Home</a>
+      <a href="/start" >Play again</a>
   
     </div>
     
