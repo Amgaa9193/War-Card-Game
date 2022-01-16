@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.root_content {
+  margin: 20px auto;
+  width: 50%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score_content {
+  margin: 20px auto;
+  width: 40%;
+  border: 3px solid green;
+  padding: 10px;
+}
+
+a:link {
+  color: green;
+  text-decoration: none;
+}
+
+a:visited {
+  color: green;
+}
+
+a:hover {
+  color: green;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:active {
+  background-color: lightgray;
+  font-style: italic;
+}
+
+table {
+  /* border: 1px solid black; */
+  margin-bottom: 10px;
+}
+
+th, td {
+  /* border: 1px solid black; */
+  padding: 10px 15px;
+}
+
+tr {
+  text-align: center;
+  padding: 5px;
+}
+
+td {
+  text-align: center;
+  padding: 5px;
+}

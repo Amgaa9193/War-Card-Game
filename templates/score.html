@@ -1,0 +1,26 @@
+{% extends 'base.html'%}
+
+{% block head%} 
+  <title>WAR SCORES</title>
+{% endblock%}
+
+{% block body%} 
+  <div class="score_content" >
+    <table>
+      <tr>
+        <th>Last Played</th>
+        <th>Winner</th>
+        <th>Score</th>
+      </tr>
+
+      {% for score in scores %}
+      <tr >
+        <td>{{score.date_created.date()}}</td>
+        <td>{{score.winner_name}}</td>
+        <td>{{score.total_win}}</td>
+      </tr>
+      {% endfor%}
+    </table>
+   <a href="/">Back to home</a>
+  </div>
+{% endblock%}
