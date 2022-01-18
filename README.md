@@ -9,8 +9,9 @@
   
 
 # Getting Started
-
+<!-- informal test print  -->
 1. Run the following command to install the dependencies:
+       
 
         pip3 install -r requirements.txt
 
@@ -29,9 +30,8 @@
 3. Press the Veiw Score Button to see lifetime wins for each player stored in a database.
 
 # Room for improvement:
-1. A Docker image
-2. Make it more fun: Make it for two human players so the person who loses does a dare picked by the computer randomly. 
-3. Better UI for example Use Python turtle pre-installed library to create the card pictures.
+1. Use Werkzeug test Client for unit testing instead of informal tests with print statements.
+2. Better UI for example Use Python turtle pre-installed library to create the card pictures.
 
 ## Contact
 amgaa.khosbayar@gmail.com - feel free to contact me!
