@@ -5,10 +5,10 @@
 # You should include some basic tests along with the application code.
 
 
+
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-# from game import Game
 
 
 # Setting up the app
@@ -23,7 +23,6 @@ db = SQLAlchemy(app)
 class Score(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   winner_name = db.Column(db.String(10), nullable=False)
-  # score = db.Column(db.Integer, default=0, nullable=False)
   total_win = db.Column(db.Integer, default=1, nullable=False)
   date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -35,7 +34,7 @@ class Score(db.Model):
 
 
 # ********************************************************************************
-# game class combines DEck, Card, Player classes and initiate a new game!
+# game class combines Deck, Card, Player classes and initiate a new game!
 from deck import Deck 
 from player import Player 
 
@@ -51,14 +50,17 @@ class Game:
   # saves and updates the score to the database
   def save_score(self, player_name):
   
-      score = Score.query.filter_by(winner_name=player_name).order_by(Score.date_created).first()
+      score = Score.query.filter_by(winner_name=player_name).first()
       if score:
         # print(score)
         try:
+          
           score.total_win += 1
+          setattr(score, 'date_created' , datetime.utcnow())
+          # print(score.date_created.date())
           db.session.commit()
           return redirect('/scores')
-        except:
+        except: 
           return "There was issue updating this score!"
       else:
         try:
@@ -74,8 +76,8 @@ class Game:
 
   def start_game(self):
     newdeck = Deck()
-    # newdeck.show()
     newdeck.shuffle()
+    # newdeck.show()
 
   #splitting the deck among the two players - alternate card from deck goes to each player respectively
 
@@ -199,7 +201,7 @@ class Game:
 def index():
   return render_template("index.html")
 
-# endpoint 1 to start a game?
+# endpoint to start a game
 @app.route("/start")
 def start():
   game = Game()
