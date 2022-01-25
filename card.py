@@ -10,7 +10,7 @@ class Card:
   
 
 
-# Unit test:
+# test:
 # card = Card("♠", 2)
 # card.show()
 

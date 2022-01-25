@@ -1,6 +1,5 @@
 from card import Card
 import random
-# from player import Player
 
 
 
@@ -28,8 +27,7 @@ class Deck:
       card.show()
 
 
-
-# Unit test:
+# test:
 # deck = Deck()
 # deck.shuffle()
 # deck.show()

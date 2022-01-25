@@ -29,6 +29,7 @@ class Score(db.Model):
   # function that returns str everythime a Score is created 
   def __repr__(self) -> str:
       return '<Task %r>' % self.id
+    
 
 
 
@@ -40,7 +41,6 @@ from player import Player
 
 class Game:
   def __init__(self):
-      self.deck = Deck()
       self.player1 = Player("Ben")
       self.player2 = Player("Rey")
       self.display_content = []
@@ -52,12 +52,9 @@ class Game:
   
       score = Score.query.filter_by(winner_name=player_name).first()
       if score:
-        # print(score)
         try:
-          
           score.total_win += 1
           setattr(score, 'date_created' , datetime.utcnow())
-          # print(score.date_created.date())
           db.session.commit()
           return redirect('/scores')
         except: 
@@ -80,7 +77,6 @@ class Game:
     # newdeck.show()
 
   #splitting the deck among the two players - alternate card from deck goes to each player respectively
-
     for i in range(0,len(newdeck.cards)-1):  
       if i % 2 == 0:
         self.player1.cards_in_hand.append(newdeck.cards[i])
@@ -102,58 +98,50 @@ class Game:
 
       round += 1
       self.display_content.append(f"Round {round}")
-      # print(f"Round {round}")
 
       if len(self.player1.cards_in_hand) == 0:
         self.display_content.append(f'{self.player1.name} is out of cards {self.player2.name} Won!')
-        # print(f'{self.player1.name} is out of cards {self.player2.name} Wins!')
         self.save_score(self.player2.name)
         game_status = False
         break
 
       if len(self.player2.cards_in_hand) == 0:
         self.display_content.append(f'{self.player2.name} is out of cards {self.player1.name} Won!')
-        # print(f'{self.player2.name} is out of cards {self.player1.name} Wins!')
         self.save_score(self.player1.name)
         game_status = False
         break
-      # game continie
+
+      # base case not satisfied thus game continie
       else: 
         dealt_cards = []
 
         one_hand = self.player1.deal_one()
         self.display_content.append(f"Player one first hand: {one_hand.suite, one_hand.value  }")
-        # print(f" Player one first hand: {one_hand.suite, one_hand.value  }")
         dealt_cards.append(one_hand)
 
         two_hand = self.player2.deal_one()
         self.display_content.append(f" Player two first hand: {two_hand.suite, two_hand.value  }")
-        # print(f" Player two first hand: {two_hand.suite, two_hand.value  }")
         dealt_cards.append(two_hand)
 
     
         if one_hand.value > two_hand.value:
           self.player1.add_cards(dealt_cards)
           self.display_content.append(f"{self.player1.name}'s take")
-          # print(f"{self.player1.name}'s take")
         elif one_hand.value < two_hand.value:
           self.player2.add_cards(dealt_cards)
           self.display_content.append(f"{self.player2.name}'s take")
-          # print(f"{self.player2.name}'s take")
+
         elif one_hand.value == two_hand.value:
           at_war = True 
           self.display_content.append("WAR!!!")
-          # print("WAR!!!")
           while at_war == True: 
             if len(self.player1.cards_in_hand) < 2:
               self.display_content.append(f"{self.player1.name} run out of card, {self.player2.name} has won!")
-              # print(f"{self.player2.name} has won")
               self.save_score(self.player2.name)
               at_war = False
               game_status = False
             elif len(self.player2.cards_in_hand) < 2:
               self.display_content.append(f"{self.player2.name} run out of card, {self.player1.name} has won!")
-              # print(f"{self.player1.name} has won")
               self.save_score(self.player1.name)
               at_war = False
               game_status = False
@@ -163,14 +151,12 @@ class Game:
               hidden_hand1 = self.player1.deal_one()
               one_hand = self.player1.deal_one()
               self.display_content.append(f" Player one second hand: {one_hand.suite, one_hand.value  }")
-              # print(f" Player one first hand: {one_hand.suite, one_hand.value  }")
               war_cards.append(hidden_hand1)
               war_cards.append(one_hand)
 
               hidden_hand2 = self.player2.deal_one()
               two_hand = self.player2.deal_one()
               self.display_content.append(f" Player two second hand: {two_hand.suite, two_hand.value  }")
-              # print(f" Player two first hand: {two_hand.suite, two_hand.value  }")
               war_cards.append(hidden_hand2)
               war_cards.append(two_hand)
 
@@ -178,30 +164,28 @@ class Game:
           
               if one_hand.value > two_hand.value:
                 self.player1.add_cards(dealt_cards)
-                # print(self.player1.cards_in_hand[-1])
 
                 # for card in self.player1.cards_in_hand:
                 #   card.show()
                 self.display_content.append(f"{self.player1.name}'s take")
-                # print(f"{self.player1.name}'s take")
                 at_war = False
               elif one_hand.value < two_hand.value:
                 self.player2.add_cards(dealt_cards)
-                # print(self.player2.cards_in_hand[-1])
 
                 # for card in self.player2.cards_in_hand:
                 #   card.show()
                 self.display_content.append(f"{self.player2.name}'s take")
-                # print(f"{self.player2.name}'s take")
                 at_war = False
               elif one_hand.value == two_hand.value:
                 at_war = True
 
+
+# endpoint => when we hit this url home page will be brought up
 @app.route("/")
 def index():
   return render_template("index.html")
 
-# endpoint to start a game
+# API endpoint to start a game
 @app.route("/start")
 def start():
   game = Game()
